@@ -46,14 +46,21 @@ from OpenGL.GL import *
 import pyqtgraph.opengl as gl
 import numpy as np
 
-daata = np.empty([25,25,25,4])
+import h5py
 
-for x in range(0,25):
-  for y in range(0,25):
-    for z in range(0,25):
-      for color in range(0,4):
-	daata[x,y,z,color] = np.random.power(2.0)*255
+# daata = np.empty([25,25,25,4])
 
+# for x in range(0,25):
+#   for y in range(0,25):
+#     for z in range(0,25):
+#       for color in range(0,4):
+# 	daata[x,y,z,color] = np.random.power(2.0)*255
+with h5py.File('stack.h5') as data_f:
+        daata = data_f['data'].value
+
+daata = daata[:,:,:,2,0]
+daata = np.expand_dims(daata, axis=3)
+daata = np.repeat(daata, 4, axis=3)
 
 #Adds new blending function to pyqtgraph/opengl/GLGraphicsItem.py
 gl.GLGraphicsItem.GLOptions['costume'] = {
